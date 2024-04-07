@@ -3,14 +3,14 @@ from datetime import datetime
 import classes.Trading as Trading
 import classes.Logger as lg
 
-td = Trading.Trading()
 sym = []
 positions = []
 sell_orders = []
 
-def check_pos():
+def check_pos(td):
   for pos in positions:
     #print(f"{pos['sym']} | {pos['qty']} | {pos['loss']} | {pos['profit']}")
+
     value = td.get_last_value(pos['sym'])
 
     lg.log_compute_sell_orders(pos['sym'], value, pos['loss'], pos['profit'], datetime.strptime(str(datetime.now()), "%Y-%m-%d %H:%M:%S.%f").strftime("%Y-%m-%d %H:%M:%S"))
@@ -27,8 +27,9 @@ def check_pos():
     if (td.log_if_filled(sell)):
       sell_orders.remove(sell)
 
-def paper_trading():
+def paper_trading(api_key, api_secret_key):
   symbol = 'BTC/USD'
+  td = Trading.Trading(api_key, api_secret_key)
 
   while True:
 
@@ -37,8 +38,6 @@ def paper_trading():
       order = td.buy_order(symbol)
       positions.append(order)
 
-    check_pos()
+    check_pos(td)
     sleep(60)
     #break
-
-paper_trading()

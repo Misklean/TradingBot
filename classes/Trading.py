@@ -10,15 +10,21 @@ from alpaca.data.requests import CryptoLatestQuoteRequest
 
 import classes.Logger as lg
 
-API_KEY = '' # replace with your API
-API_SECRET_KEY = ''
-ALPACA_URL = 'https://paper-api.alpaca.markets'
-initial_portfolio = 100000
-
 class Trading:
 
     client = CryptoHistoricalDataClient()
-    trading_client = TradingClient(API_KEY, API_SECRET_KEY, paper=True)
+    trading_client = None
+
+    API_KEY = ''
+    API_SECRET_KEY = ''
+    ALPACA_URL = 'https://paper-api.alpaca.markets'
+    initial_portfolio = 100000
+
+     # parameterized constructor
+    def __init__(self, api_key, api_secret_key):
+        self.API_KEY = api_key
+        self.API_SECRET_KEY = api_secret_key
+        self.trading_client = TradingClient(self.API_KEY, self.API_SECRET_KEY, paper=True)
 
     def convert_to_local_time(self, tz):
         tz_local = tz.astimezone(pytz.timezone('Europe/Paris'))
@@ -28,8 +34,8 @@ class Trading:
 
     def get_profit(self, balance):
         return {
-            'portfolio': float(balance) - initial_portfolio,
-            'percent': (float(balance) - initial_portfolio) / initial_portfolio * 100
+            'portfolio': float(balance) - self.initial_portfolio,
+            'percent': (float(balance) - self.initial_portfolio) / self.initial_portfolio * 100
         }
 
     def get_last_value(self, symbol):
@@ -79,7 +85,7 @@ class Trading:
     def buy_order(self, symbol):
         market_order_data = MarketOrderRequest(
                             symbol=symbol,
-                            notional=initial_portfolio / 100,
+                            notional=self.initial_portfolio / 100,
                             side=OrderSide.BUY,
                             time_in_force=TimeInForce.IOC
         )

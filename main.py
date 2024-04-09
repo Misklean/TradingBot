@@ -7,14 +7,12 @@ def main():
     import json
  
     # Opening JSON file
-    f = open('main.conf')
+    f = open('mymain.conf')
 
     # returns JSON object as 
     # a dictionary
     data = json.load(f)
 
-    # Iterating through the json
-    # list
     # print(data["API_KEY"])
     # print(data["API_SECRET_KEY"])
     # print(data["symbols"])

@@ -2,6 +2,8 @@ from time import sleep
 from datetime import datetime
 import classes.Trading as Trading
 import classes.Logger as lg
+import strategies.test as tst
+import classes.MarketInfo as mk
 
 sym = []
 positions = []
@@ -11,7 +13,7 @@ def check_pos(td):
   for pos in positions:
     #print(f"{pos['sym']} | {pos['qty']} | {pos['loss']} | {pos['profit']}")
 
-    value = td.get_last_value(pos['sym'])
+    value = mk.get_last_value(pos['sym'])
 
     lg.log_compute_sell_orders(pos['sym'], value, pos['loss'], pos['profit'], datetime.strptime(str(datetime.now()), "%Y-%m-%d %H:%M:%S.%f").strftime("%Y-%m-%d %H:%M:%S"))
 
@@ -33,8 +35,8 @@ def paper_trading(api_key, api_secret_key):
 
   while True:
 
-    #if td.time_to_market_close() > 120:
-    if len(positions) == 0:
+    if td.time_to_market_close() > 120:
+    #if tst.init(td, symbol) == 0:
       order = td.buy_order(symbol)
       positions.append(order)
 

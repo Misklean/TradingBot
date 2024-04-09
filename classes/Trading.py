@@ -1,18 +1,16 @@
 from time import sleep
 from datetime import datetime
-import pytz
-
 from alpaca.trading.client import TradingClient
 from alpaca.trading.requests import MarketOrderRequest, GetAssetsRequest, StopLimitOrderRequest
 from alpaca.trading.enums import OrderSide, TimeInForce, AssetClass, OrderClass, PositionSide, OrderStatus
-from alpaca.data.historical import CryptoHistoricalDataClient
-from alpaca.data.requests import CryptoLatestQuoteRequest
 
+import numpy as np
+import talib as ta
+import pytz
+import pandas as pd
 import classes.Logger as lg
 
 class Trading:
-
-    client = CryptoHistoricalDataClient()
     trading_client = None
 
     API_KEY = ''
@@ -20,7 +18,6 @@ class Trading:
     ALPACA_URL = 'https://paper-api.alpaca.markets'
     initial_portfolio = 100000
 
-     # parameterized constructor
     def __init__(self, api_key, api_secret_key):
         self.API_KEY = api_key
         self.API_SECRET_KEY = api_secret_key
@@ -37,14 +34,6 @@ class Trading:
             'portfolio': float(balance) - self.initial_portfolio,
             'percent': (float(balance) - self.initial_portfolio) / self.initial_portfolio * 100
         }
-
-    def get_last_value(self, symbol):
-        # single symbol request
-        request_params = CryptoLatestQuoteRequest(symbol_or_symbols=symbol)
-
-        latest_quote = self.client.get_crypto_latest_quote(request_params)
-
-        return latest_quote[symbol].ask_price
     
     def log_if_filled(self, order):
         if self.is_filled(order[0]):

@@ -1,15 +1,18 @@
 import classes.Trading as Trading
+import classes.Indicator as ind
 
 rsi_above = []
 cci_above = []
 macd_above = []
 
 def init(td, symbol):
-    sma = td.sma(symbol)
-    rsi = td.rsi(symbol)
-    cci = td.cci(symbol)
-    (macd, macdsignal, macdhist) = td.macd(symbol)
+    indicator = ind.Indicator(symbol)
 
-    print(macdhist)
+    sma = indicator.sma()
+    rsi = indicator.rsi()
+    cci = indicator.cci()
+    (macd, macdsignal, macdhist) = indicator.macd()
+
+    print(sma)
 
     return True

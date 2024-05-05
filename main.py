@@ -1,4 +1,5 @@
 from paper import paper_trading
+from backtest import backtest
 import json
 
 def main():
@@ -17,7 +18,8 @@ def main():
     # print(data["API_SECRET_KEY"])
     # print(data["symbols"])
 
-    paper_trading(data["API_KEY"], data["API_SECRET_KEY"])
+    #paper_trading(data["API_KEY"], data["API_SECRET_KEY"])
+    backtest(data["API_KEY"], data["API_SECRET_KEY"])
 
     # Closing file
     f.close()

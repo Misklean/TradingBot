@@ -5,14 +5,16 @@ rsi_above = []
 cci_above = []
 macd_above = []
 
-def init(td, symbol):
-    indicator = ind.Indicator(symbol)
-
-    sma = indicator.sma()
-    rsi = indicator.rsi()
-    cci = indicator.cci()
-    (macd, macdsignal, macdhist) = indicator.macd()
-
-    print(sma)
-
-    return True
+def init(data):
+    indicator = ind.Indicator(data)
+    
+    sma = indicator.sma(window=20)
+    macd, macdsignal, _ = indicator.macd()
+    cci = indicator.cci(timeperiod=14)
+    rsi = indicator.rsi(timeperiod=14)
+    
+    # Example strategy: Buy when close price is above SMA and MACD line crosses above signal line
+    entries = (data['close'] > sma)
+    exits = (data['close'] < sma)
+    
+    return entries, exits

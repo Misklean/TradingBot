@@ -1,0 +1,6 @@
+vectorbt
+numpy
+TA-Lib
+pandas
+alpaca-py
+alpaca-trade-api

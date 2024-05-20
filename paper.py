@@ -4,6 +4,7 @@ import classes.Trading as Trading
 import classes.Logger as lg
 import strategies.test as tst
 import classes.MarketInfo as mk
+from classes.MarketInfo import TimeFrameEnum
 
 sym = []
 positions = []
@@ -30,16 +31,18 @@ def check_pos(td):
       sell_orders.remove(sell)
 
 def paper_trading(api_key, api_secret_key):
-  symbol = 'BTC/USD'
-  td = Trading.Trading(api_key, api_secret_key)
+    td = Trading.Trading(api_key, api_secret_key)
+    symbol = 'BTC/USD'
+    
+    while True:
+        if td.time_to_market_close() > 120:
+            data = mk.get_symbol_data(symbol, TimeFrameEnum.MINUTE)
+            entries, exits = tst.init(data)
+            
+            print(entries.iloc[-1])
+            if entries.iloc[-1]:  # Check the last entry signal
+                order = td.buy_order(symbol)
+                positions.append(order)
 
-  while True:
-
-    if td.time_to_market_close() > 120:
-    #if tst.init(td, symbol) == 0:
-      order = td.buy_order(symbol)
-      positions.append(order)
-
-    check_pos(td)
-    sleep(60)
-    #break
+        check_pos(td)
+        sleep(60)
